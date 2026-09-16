@@ -1,0 +1,32 @@
+COMO PUBLICAR ESTA PASTA NA INTERNET (GitHub Pages, de graça)
+================================================================
+
+Esta pasta é o site completo: a CENTRAL DAS OBRAS (index.html) e cada
+obra em obras/<nome>/. Quem abrir o link vê a lista, escolhe a obra e
+mede sobre o splat, sem instalar nada.
+
+Jeito mais simples: no Splat Geo, passo 5, marque "publicar no GitHub
+depois" — ou rode o botão "5 - Publicar site no GitHub.bat" na pasta
+D:\splat_geo. Antes, faça 1 e 2 uma vez:
+
+1. Conta no GitHub (github.com, gratuita).
+2. Crie um repositório: botão "New" > nome (ex.: obra-jiquirica) > Public
+   > "Create repository". Copie o endereço que aparece
+   (https://github.com/SEU-USUARIO/obra-jiquirica.git).
+3. Rode "5 - Publicar site no GitHub.bat" e cole o endereço.
+   Na primeira vez o Windows abre o navegador para você entrar no GitHub.
+4. No site do GitHub: Settings > Pages > em "Branch" escolha "main" e
+   "/ (root)" > Save. Em 1 a 2 minutos o link fica no ar:
+   https://SEU-USUARIO.github.io/obra-jiquirica/
+
+Avisos:
+- O site é PÚBLICO: qualquer pessoa com o link abre (o GitHub gratuito
+  não publica sites privados). Não use nome de cliente no endereço se
+  isso for problema.
+- Limites do GitHub: cada arquivo até 100 MB (o splat já sai dentro),
+  site até 1 GB. O splat grande demora para abrir na internet do cliente
+  (uns 80 MB): avise que leva um minuto.
+- Para atualizar uma obra, exporte de novo (com a caixinha "publicar"): o
+  site inteiro é reenviado com todas as obras.
+- Para TIRAR uma obra do site, apague a pasta dela em
+  D:\splat_geo\site_github\obras e publique de novo.

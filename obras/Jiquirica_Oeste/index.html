@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Splat Geo — visualizador</title>
+<link rel="stylesheet" href="./visualizador.css">
+<script type="importmap">
+{"imports": {
+  "three": "./vendor/three/three.module.js",
+  "three/addons/": "./vendor/three/jsm/",
+  "@sparkjsdev/spark": "./vendor/spark/spark.module.js"
+}}
+</script>
+</head>
+<body>
+
+<header>
+  <a id="voltar-central" href="../../index.html" title="Central das obras" style="display:none;color:#4da3ff;text-decoration:none">◀ Central</a>
+  <b id="titulo">Splat Geo</b>
+  <span id="subtitulo"></span>
+  <span id="carregando">carregando…</span>
+</header>
+
+<div id="area-3d">
+  <canvas id="tela"></canvas>
+
+  <div id="barra">
+    <label class="check"><input type="checkbox" id="ver-splat" checked> splat</label>
+    <input type="range" id="opacidade-splat" min="5" max="100" value="100" title="Transparência do splat">
+    <label class="check"><input type="checkbox" id="ver-terreno" checked> terreno</label>
+    <input type="range" id="opacidade-terreno" min="5" max="100" value="100" title="Transparência do terreno">
+    <label class="check"><input type="checkbox" id="ver-linhas" checked> curvas</label>
+    <label class="check"><input type="checkbox" id="ver-pontos" checked> pontos</label>
+    <label class="check" id="rotulo-secoes"><input type="checkbox" id="ver-secoes" checked> seções</label>
+    <label class="check" title="Curvas, pontos e seções desenhados por cima do splat">
+      <input type="checkbox" id="desenho-por-cima"> desenho por cima</label>
+    <label class="check" title="Resolução da tela. 'auto' baixa sozinho se o computador não acompanhar (sem placa de vídeo, use média ou baixa)">
+      qualidade <select id="qualidade">
+        <option value="auto" selected>auto</option>
+        <option value="alta">alta</option>
+        <option value="media">média</option>
+        <option value="baixa">baixa</option>
+      </select></label>
+    <button id="btn-camadas" title="Quem fica por cima de quem: splat, terreno, curvas e pontos, seções">Camadas</button>
+    <button id="btn-topo" title="Olhar de cima">Vista de cima</button>
+    <button id="btn-enquadrar" title="Recolocar a câmera">Enquadrar</button>
+    <button id="btn-foto" title="Baixa uma imagem da vista atual">Foto</button>
+  </div>
+
+  <div id="painel-camadas" class="oculto">
+    <label class="check"><input type="checkbox" id="camadas-real">
+      3D real — a profundidade decide quem aparece</label>
+    <div class="dica-camadas">Desligado, a ordem abaixo manda (de cima para baixo).
+      Use as transparências para ver através de uma camada.</div>
+    <div id="lista-camadas"></div>
+  </div>
+
+  <div id="medir">
+    <button id="btn-medir-dist">Distância</button>
+    <button id="btn-medir-area">Área</button>
+    <button id="btn-medir-limpar" class="secundario">Limpar</button>
+    <div id="info-medicao"></div>
+    <div id="dica"></div>
+  </div>
+
+  <div id="ajuda" title="Como navegar">
+    <b>?</b>
+    <div id="ajuda-texto">
+      Botão esquerdo gira · direito arrasta · roda dá zoom na direção do ponteiro<br>
+      W/S/A/D andam, Q/E descem e sobem, Shift corre<br>
+      Distância/Área: clique nos pontos (Esc encerra)
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span id="coord">—</span>
+  <span id="credito"></span>
+</footer>
+
+<script type="module" src="./js/visualizador.js"></script>
+</body>
+</html>

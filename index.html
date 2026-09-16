@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LR Empreendimentos — Central das obras</title>
+<link rel="icon" href="./logo_lr.svg" type="image/svg+xml">
+<style>
+  /* Fundo no "negativo" do logotipo da LR: preto puro, marca em branco. */
+  :root { --fundo: #000000; --painel: #0d0d0d; --borda: #2b2b2b; --texto: #f2f2f2;
+    --fraco: #9a9a9a; --acento: #ffffff; --acento-texto: #000000; }
+  * { box-sizing: border-box; }
+  html { background: var(--fundo); }
+  body { margin: 0; min-height: 100vh; background: var(--fundo); color: var(--texto);
+    font: 14px/1.45 system-ui, "Segoe UI", Roboto, sans-serif; position: relative; }
+  /* marca d'água fixa, bem discreta, atrás de tudo */
+  body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: url("./logo_lr.svg") center 62% / min(92vw, 1400px) no-repeat; opacity: .045; }
+  header, main, #vazio, footer { position: relative; z-index: 1; }
+  header { padding: 44px 24px 26px; text-align: center; }
+  header .logo { display: block; margin: 0 auto; width: min(88vw, 720px); height: auto; }
+  header h1 { margin: 26px 0 4px; font-size: 15px; font-weight: 500; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--texto); }
+  header span { color: var(--fraco); font-size: 13px; }
+  main { padding: 10px 24px 24px; display: grid; gap: 16px; max-width: 1400px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .cartao { background: var(--painel); border: 1px solid var(--borda); border-radius: 8px;
+    overflow: hidden; display: flex; flex-direction: column; }
+  .cartao:hover { border-color: #555; }
+  .cartao .foto { aspect-ratio: 16/9; background: #050505 center/cover no-repeat;
+    display: flex; align-items: center; justify-content: center; color: var(--fraco); }
+  .cartao .corpo { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .cartao h2 { margin: 0; font-size: 16px; font-weight: 600; }
+  .cartao .info { color: var(--fraco); font-size: 12px; }
+  .cartao a.abrir { margin-top: auto; align-self: flex-start; background: var(--acento);
+    color: var(--acento-texto); text-decoration: none; padding: 7px 16px; border-radius: 5px;
+    font-weight: 600; }
+  .cartao a.abrir:hover { background: #d9d9d9; }
+  #vazio { color: var(--fraco); padding: 24px; text-align: center; }
+  footer { padding: 18px 24px 26px; color: var(--fraco); font-size: 12px; text-align: center; }
+  footer small { display: block; margin-top: 6px; color: #6a6a6a; }
+</style>
+</head>
+<body>
+<header>
+  <img class="logo" src="./logo_lr.svg" alt="LR Empreendimentos — Engenharia e Construção">
+  <h1>Central das obras</h1>
+  <span id="resumo">carregando…</span>
+</header>
+<main id="lista"></main>
+<div id="vazio" style="display:none">Nenhuma obra publicada ainda.</div>
+<footer><small>SplatGeo - Desenvolvido pela equipe LR Empreendimentos</small></footer>
+<script src="./central.js"></script>
+</body>
+</html>

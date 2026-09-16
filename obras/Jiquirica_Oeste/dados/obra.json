@@ -1,0 +1,37 @@
+{
+ "nome": "Jiquiriça Oeste",
+ "epsg": 31984,
+ "nome_epsg": "SIRGAS 2000 / UTM 24S",
+ "origem": [
+  438406.154,
+  8534887.845,
+  281.574
+ ],
+ "gerado_em": "16/09/2026 18:41",
+ "credito": "Imagens © Google",
+ "splat": {
+  "arquivo": "splat.spz",
+  "arquivos": [
+   "splat.spz"
+  ],
+  "formato": "spz",
+  "grau_sh": 3,
+  "splats": 2407889,
+  "mb": 61.2,
+  "posicao": [
+   0,
+   0,
+   0
+  ],
+  "quaternion": [
+   1,
+   0,
+   0,
+   0
+  ],
+  "escala": 1
+ },
+ "topografia": true,
+ "central": true,
+ "aviso": ""
+}
