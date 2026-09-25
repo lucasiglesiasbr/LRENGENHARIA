@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LR Empreendimentos — Central das obras</title>
+<link rel="icon" href="./logo_lr.svg" type="image/svg+xml">
+<style>
+  /* A página é a de sempre (logotipo, "Central das obras", um cartão por obra). Do
+     site da LR vêm só o TEMA (grafite quente, creme e laranja; letras Archivo e IBM
+     Plex Mono) e os EFEITOS (cortina de entrada, surgir ao rolar, zoom na foto,
+     cursor próprio, granulado, barra de progresso). As fontes vão junto (fontes/):
+     o site não depende de nenhum endereço de fora. */
+  @font-face { font-family: "Archivo"; font-style: normal; font-weight: 400 900; font-display: swap;
+    src: url("./fontes/archivo-latin.woff2") format("woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("./fontes/plexmono-400-latin.woff2") format("woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("./fontes/plexmono-500-latin.woff2") format("woff2"); }
+
+  :root { --fundo: #181411; --painel: #221E1A; --borda: rgba(242, 236, 227, .13); --texto: #F2ECE3;
+    --fraco: #8A8178; --acento: #FA6900; --acento-texto: #ffffff;
+    --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    --suave: cubic-bezier(.2, .8, .2, 1); --firme: cubic-bezier(.16, 1, .3, 1); }
+  * { box-sizing: border-box; }
+  html { background: var(--fundo); scroll-behavior: smooth; }
+  body { margin: 0; min-height: 100vh; background: var(--fundo); color: var(--texto); position: relative;
+    font: 14px/1.45 Archivo, system-ui, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; }
+  ::selection { background: var(--acento); color: #fff; }
+
+  @keyframes lrFadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+  @keyframes lrLine { from { width: 0; } to { width: 44px; } }
+  @keyframes lrCurtain { 0%, 42% { transform: translateY(0); } 100% { transform: translateY(-101%); } }
+  @keyframes lrCurtainMark { 0% { opacity: 0; transform: scale(.94); } 22%, 40% { opacity: 1; transform: none; } 55%, 100% { opacity: 0; } }
+
+  /* efeitos de página inteira: cortina, granulado, cursor, progresso */
+  #cortina { position: fixed; inset: 0; z-index: 9998; background: var(--fundo); display: flex;
+    align-items: center; justify-content: center; pointer-events: none;
+    animation: lrCurtain 1.5s cubic-bezier(.76, 0, .24, 1) forwards; }
+  #cortina img { width: min(70vw, 460px); animation: lrCurtainMark 1.5s ease forwards; }
+  #granulado { position: fixed; inset: 0; z-index: 9990; width: 100%; height: 100%; pointer-events: none;
+    opacity: .07; mix-blend-mode: overlay; }
+  #progresso { position: fixed; top: 0; left: 0; z-index: 9991; height: 2px; width: 0;
+    background: linear-gradient(90deg, #FA6900, #FFB07A); transition: width .12s linear; }
+  #cur-anel, #cur-ponto { position: fixed; top: 0; left: 0; border-radius: 50%; pointer-events: none; opacity: 0; }
+  #cur-anel { z-index: 9995; width: 38px; height: 38px; margin: -19px 0 0 -19px; border: 1px solid rgba(250, 105, 0, .85);
+    transition: width .3s var(--suave), height .3s var(--suave), margin .3s var(--suave), background .3s, opacity .3s; }
+  #cur-anel.sobre { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: rgba(250, 105, 0, .12); }
+  #cur-ponto { z-index: 9996; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; background: var(--acento); transition: opacity .3s; }
+  body.cursor-proprio, body.cursor-proprio a { cursor: none; }
+
+  /* marca d'água fixa, bem discreta, atrás de tudo */
+  body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: url("./logo_lr.svg") center 62% / min(92vw, 1400px) no-repeat; opacity: .04; }
+  header, main, #vazio, footer { position: relative; z-index: 1; }
+  header { padding: 44px 24px 26px; text-align: center; }
+  header .logo { display: block; margin: 0 auto; width: min(88vw, 720px); height: auto;
+    opacity: 0; animation: lrFadeUp .9s .95s ease forwards; }
+  header h1 { margin: 26px 0 6px; font-family: var(--mono); font-size: 13px; font-weight: 500; letter-spacing: .34em;
+    text-transform: uppercase; color: var(--acento); display: flex; align-items: center; justify-content: center; gap: 14px;
+    opacity: 0; animation: lrFadeUp .8s 1.15s ease forwards; }
+  header h1::before, header h1::after { content: ""; height: 1px; width: 0; background: var(--acento);
+    animation: lrLine .9s 1.2s cubic-bezier(.76, 0, .24, 1) forwards; }
+  header span { display: inline-block; color: var(--fraco); font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; opacity: 0; animation: lrFadeUp .8s 1.3s ease forwards; }
+  main { padding: 10px 24px 24px; display: grid; gap: 16px; max-width: 1400px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .cartao { background: var(--painel); border: 1px solid var(--borda); border-radius: 2px;
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: border-color .4s, transform .5s var(--suave), box-shadow .5s; }
+  .cartao:hover { border-color: var(--acento); transform: translateY(-4px); box-shadow: 0 18px 44px rgba(0, 0, 0, .45); }
+  .cartao .foto { aspect-ratio: 16/9; background: #120f0c; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; color: var(--fraco);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; }
+  .cartao .foto .img { position: absolute; inset: 0; background: center / cover no-repeat;
+    transition: transform 1.1s var(--firme); }
+  .cartao:hover .foto .img { transform: scale(1.07); }
+  .cartao .corpo { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .cartao h2 { margin: 0; font-size: 17px; font-weight: 800; letter-spacing: -.02em; }
+  .cartao .info { color: var(--fraco); font-size: 12px; }
+  /* botão Abrir: faixa inteira no pé do cartão — rótulo à esquerda, seta num quadrado
+     laranja à direita; ao passar o mouse o laranja varre a faixa e a seta anda */
+  .cartao a.abrir { position: relative; overflow: hidden; margin: auto -16px -16px; margin-top: auto; padding: 0 0 0 16px;
+    display: flex; align-items: center; justify-content: space-between; min-height: 46px;
+    border-top: 1px solid var(--borda); color: var(--texto); text-decoration: none;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+    transition: color .35s, letter-spacing .45s var(--suave), border-color .35s; }
+  .cartao a.abrir::before { content: ""; position: absolute; inset: 0; background: var(--acento);
+    transform: scaleX(0); transform-origin: left; transition: transform .55s var(--firme); }
+  .cartao a.abrir span, .cartao a.abrir i { position: relative; }
+  .cartao a.abrir i { align-self: stretch; width: 46px; display: flex; align-items: center; justify-content: center;
+    background: var(--acento); color: #fff; font-style: normal; font-size: 15px; letter-spacing: 0; }
+  .cartao a.abrir i b { display: block; font-weight: 400; transition: transform .45s var(--suave); }
+  .cartao:hover a.abrir { border-color: var(--acento); }
+  .cartao a.abrir:hover, .cartao a.abrir:focus-visible { color: #fff; letter-spacing: .3em; outline: none; }
+  .cartao a.abrir:hover::before, .cartao a.abrir:focus-visible::before { transform: scaleX(1); }
+  .cartao a.abrir:hover i b, .cartao a.abrir:focus-visible i b { transform: translateX(5px); }
+  .cartao .corpo .info:last-of-type { margin-bottom: 14px; }
+  #vazio { color: var(--fraco); padding: 24px; text-align: center; }
+  footer { padding: 18px 24px 26px; color: var(--fraco); font-size: 12px; text-align: center; }
+  footer a { color: var(--fraco); font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    text-decoration: none; border-bottom: 1px solid var(--acento); padding-bottom: 3px; }
+  footer a:hover { color: var(--acento); }
+  footer small { display: block; margin-top: 6px; color: #6B6055; font-family: var(--mono); font-size: 11px;
+    letter-spacing: .14em; text-transform: uppercase; }
+
+  /* surge ao rolar */
+  [data-rv] { opacity: 0; transform: translateY(26px); }
+  [data-rv].visto { opacity: 1; transform: none;
+    transition: opacity .9s var(--firme), transform .9s var(--firme), border-color .4s, box-shadow .5s; }
+  [data-rv].visto:hover { transform: translateY(-4px); }
+
+  /* quem pediu menos movimento ao sistema não vê cortina nem deslizes */
+  @media (prefers-reduced-motion: reduce) {
+    #cortina { display: none; }
+    *, *::before, *::after { animation-duration: .01s !important; animation-delay: 0s !important; transition-duration: .01s !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<div id="cortina"><img src="./logo_lr.svg" alt=""></div>
+<svg id="granulado" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><filter id="ruido"><feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#ruido)"/></svg>
+<div id="progresso"></div>
+<div id="cur-anel"></div><div id="cur-ponto"></div>
+
+<header>
+  <img class="logo" src="./logo_lr.svg" alt="LR Empreendimentos — Engenharia e Construção">
+  <h1>Central das obras</h1>
+  <span id="resumo">carregando…</span>
+</header>
+<main id="lista"></main>
+<div id="vazio" style="display:none">Nenhuma obra publicada ainda.</div>
+<footer><a id="sair-do-site" href="#" style="display:none">sair</a><small>SplatGeo - Desenvolvido pela equipe LR Empreendimentos</small></footer>
+<script src="./acesso.js" data-raiz="./"></script>
+<script src="./central.js?v=ae3f0680f4"></script>
+</body>
+</html>

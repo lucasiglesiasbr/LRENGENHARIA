@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Splat Geo — visualizador</title>
+<link rel="stylesheet" href="./visualizador.css?v=88bd0fc404">
+<script type="importmap">
+{"imports": {
+  "three": "./vendor/three/three.module.js",
+  "three/addons/": "./vendor/three/jsm/",
+  "@sparkjsdev/spark": "./vendor/spark/spark.module.js"
+}}
+</script>
+<script>window.SG_CARIMBO = "88bd0fc404";</script>
+</head>
+<body>
+
+<header>
+  <a id="voltar-central" href="../../index.html" title="Central das obras" style="display:none;color:#4da3ff;text-decoration:none">◀ Central</a>
+  <a id="sair-do-site" href="#" title="Sair (pede usuário e senha de novo)" style="display:none;color:#8b93a3;text-decoration:none;margin-left:10px">sair</a>
+  <b id="titulo">Splat Geo</b>
+  <span id="subtitulo"></span>
+  <span id="carregando">carregando…</span>
+</header>
+
+<div id="area-3d">
+  <canvas id="tela"></canvas>
+
+  <div id="barra">
+    <label class="check"><input type="checkbox" id="ver-splat" checked> splat</label>
+    <input type="range" id="opacidade-splat" min="5" max="100" value="100" title="Transparência do splat">
+    <label class="check"><input type="checkbox" id="ver-terreno" checked> terreno</label>
+    <input type="range" id="opacidade-terreno" min="5" max="100" value="100" title="Transparência do terreno">
+    <label class="check"><input type="checkbox" id="ver-linhas" checked> linhas</label>
+    <span id="btn-categorias" class="oculto" title="Escolher quais categorias de linha aparecem">categorias ▾</span>
+    <label class="check"><input type="checkbox" id="ver-pontos" checked> pontos</label>
+    <label class="check" id="rotulo-secoes"><input type="checkbox" id="ver-secoes" checked> seções</label>
+    <label class="check oculto" id="rotulo-grampos" title="Grampos do projeto: cada ponto é a cabeça de um grampo; azul = o mais comprido"><input type="checkbox" id="ver-grampos" checked> grampos</label>
+    <span id="n-grampos" class="oculto" title="Contagem de grampos: clique para abrir o quadro"></span>
+    <label class="check oculto" id="rotulo-tirantes" title="Tirantes da cortina atirantada: cada quadrado rosa é a cabeça de um tirante; verde = executado"><input type="checkbox" id="ver-tirantes" checked> tirantes</label>
+    <span id="n-tirantes" class="oculto" title="Contagem de tirantes: clique para abrir o quadro"></span>
+    <label class="check oculto" id="rotulo-grampos-corpo" title="Cada grampo e cada tirante desenhado para dentro do maciço, com o comprimento e a inclinação do projeto (no tirante: trecho livre em branco, ancorado em rosa)"><input type="checkbox" id="ver-grampos-corpo"> comprimentos</label>
+    <label class="check oculto" id="rotulo-barbacas" title="Barbacãs (drenos curtos da face) do projeto"><input type="checkbox" id="ver-barbacas" checked> barbacãs</label>
+    <label class="check oculto" id="rotulo-macico" title="Maciço em camadas montado a partir dos furos de sondagem (SPT). Fica embaixo do terreno: baixe a transparência do splat e do terreno, ou ligue o raio X"><input type="checkbox" id="ver-macico" checked> maciço</label>
+    <label class="check oculto" id="rotulo-raiox" title="Mostra o maciço através do splat e do terreno"><input type="checkbox" id="macico-raiox"> raio X</label>
+    <label class="check" title="Curvas, pontos e seções desenhados por cima do splat">
+      <input type="checkbox" id="desenho-por-cima"> desenho por cima</label>
+    <label class="check" title="Resolução da tela. 'auto' baixa sozinho se o computador não acompanhar (sem placa de vídeo, use média ou baixa)">
+      qualidade <select id="qualidade">
+        <option value="auto" selected>auto</option>
+        <option value="alta">alta</option>
+        <option value="media">média</option>
+        <option value="baixa">baixa</option>
+      </select></label>
+    <button id="btn-camadas" title="Quem fica por cima de quem: splat, terreno, curvas e pontos, seções">Camadas</button>
+    <button id="btn-topo" title="Olhar de cima">Vista de cima</button>
+    <button id="btn-enquadrar" title="Recolocar a câmera">Enquadrar</button>
+    <button id="btn-foto" title="Baixa uma imagem da vista atual">Foto</button>
+  </div>
+
+  <div id="painel-grampos" class="oculto"></div>
+  <div id="painel-categorias" class="oculto"></div>
+  <div id="painel-camadas" class="oculto">
+    <label class="check"><input type="checkbox" id="camadas-real">
+      3D real — a profundidade decide quem aparece</label>
+    <div class="dica-camadas">Desligado, a ordem abaixo manda (de cima para baixo).
+      Use as transparências para ver através de uma camada.</div>
+    <div id="lista-camadas"></div>
+  </div>
+
+  <div id="ferramentas">
+  <details id="desenhar">
+    <summary title="Riscar por cima da obra: linha, traço livre, seta e texto">✎ Desenhar</summary>
+    <div class="linha-des">
+      <button data-modo="linha" title="Clique nos pontos sobre o modelo; duplo clique termina">Linha</button>
+      <button data-modo="livre" title="Segure o botão e arraste sobre o modelo">Livre</button>
+      <button data-modo="seta" title="Dois cliques: de onde sai e para onde aponta">Seta</button>
+      <button data-modo="texto" title="Clique no lugar e escreva">Texto</button>
+      <button data-modo="marcador" title="Marca um local com uma observação: clique no lugar e escreva. Fica numerado e entra na lista">📍 Marcador</button>
+      <button data-modo="apagar" class="secundario" title="Clique em cima de um desenho para tirar só ele">Apagar um</button>
+    </div>
+    <div class="linha-des">
+      <span class="cores"></span>
+      <select id="des-espessura" title="Grossura do traço (em metros, no tamanho da obra)">
+        <option value="fino">fino</option>
+        <option value="medio" selected>médio</option>
+        <option value="grosso">grosso</option>
+      </select>
+      <label class="check" title="Mostrar ou esconder os desenhos"><input type="checkbox" id="ver-desenho" checked> ver</label>
+    </div>
+    <div class="linha-des">
+      <button id="btn-des-desfazer" class="secundario" disabled title="Tira o último desenho">↶ Desfazer</button>
+      <button id="btn-des-limpar" class="secundario" disabled>Limpar tudo</button>
+      <button id="btn-des-baixar" class="secundario" disabled title="Baixa os desenhos num arquivo, para mandar a outra pessoa ou guardar">Baixar</button>
+      <button id="btn-des-carregar" class="secundario" title="Abre um arquivo de desenho baixado antes (seu ou de outra pessoa)">Carregar</button>
+      <input type="file" id="des-arquivo" accept=".json,application/json" style="display:none">
+    </div>
+    <div id="info-desenho"></div>
+    <div id="lista-marcadores"></div>
+  </details>
+  <details id="medir">
+    <summary title="Medir distâncias e áreas no modelo, no desenho do topógrafo ou na ortofoto">📏 Medir</summary>
+    <div class="linha-medir">
+      <button id="btn-medir-dist">Distância</button>
+      <button id="btn-medir-area">Área</button>
+      <button id="btn-medir-limpar" class="secundario">Limpar</button>
+    </div>
+    <div id="info-medicao"></div>
+    <div id="medir-mais"></div>
+  </details>
+  <button id="btn-vista-cont" class="oculto" title="Foto de frente da face da contenção, com régua">Vista da contenção</button>
+  <!-- a dica fica fora do Medir: o Desenhar e os avisos da obra também escrevem nela -->
+  <div id="dica"></div>
+  </div>
+</div>
+
+<div id="legenda-macico" class="oculto"></div>
+
+<footer>
+  <span id="coord">—</span>
+  <span id="credito"></span>
+</footer>
+
+<script src="../../acesso.js" data-raiz="../../"></script>
+<script type="module" src="./js/visualizador.js?v=88bd0fc404"></script>
+</body>
+</html>
